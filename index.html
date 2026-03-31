@@ -21,6 +21,13 @@
       #heatmap-container {
         flex: 1;
       }
+      #dropZone {
+        border: 2px dashed #ccc;
+        padding: 12px;
+        margin-top: 8px;
+        text-align: center;
+        color: #666;
+      }
     </style>
   </head>
   <body>
@@ -28,6 +35,19 @@
 
     <div id="app">
       <div id="controls">
+        <div>
+          <label>
+            Upload CSV dataset:
+            <input id="fileInput" type="file" accept=".csv" />
+          </label>
+          <div id="dropZone">…or drop a CSV file here</div>
+          <small>
+            Expected: tabular data where each row is a record, each column is a field.
+          </small>
+        </div>
+
+        <hr/>
+        
         <label>
           Filter by type:
           <input id="typeFilter" type="text" placeholder="User, Order, ..." />
