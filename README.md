@@ -253,7 +253,3 @@ Possible enhancements for this project include:
 - Add threshold highlighting for sparse fields.
 - Cache results to improve performance.
 - Add deployment configuration for AWS.
-
-## License
-
-Internal project / private use unless your organization defines otherwise.
