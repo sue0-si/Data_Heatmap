@@ -72,11 +72,12 @@ npm install
 3. Create a `.env` file:
 
 ```env
-GRAPHQL_ENDPOINT=https://your-graphql-api.example.com/graphql
+GRAPHQL_ENDPOINT=https://countries.trevorblades.com/
 GRAPHQL_AUTH_HEADER=Authorization
 GRAPHQL_AUTH_TOKEN=Bearer your-token-here
 PORT=3000
 ```
+Right now, Countries GraphQL API is used for testing and show the code is working.
 
 4. Start the backend:
 
@@ -108,9 +109,27 @@ Example response:
 
 ```json
 [
-  { "type": "User", "field": "id", "value": 1.0 },
-  { "type": "User", "field": "email", "value": 0.92 },
-  { "type": "Order", "field": "couponCode", "value": 0.15 }
+  {
+    "type": "Country",
+    "field": "native",
+    "value": 0.996,
+    "sampleCount": 250,
+    "nonNullCount": 249
+  },
+  {
+    "type": "Country",
+    "field": "phone",
+    "value": 1,
+    "sampleCount": 250,
+    "nonNullCount": 250
+  },
+  {
+    "type": "Country",
+    "field": "capital",
+    "value": 0.78,
+    "sampleCount": 250,
+    "nonNullCount": 195
+  },
 ]
 ```
 
@@ -172,17 +191,6 @@ http://localhost:8000
 5. `main.js` filters the data based on user input.
 6. `heatmap.js` renders the filtered result with D3.
 
-## Expected data format
-
-The heatmap expects an array of objects in this shape:
-
-```js
-[
-  { type: "User", field: "email", value: 0.92 },
-  { type: "User", field: "phone", value: 0.31 },
-  { type: "Order", field: "total", value: 0.99 }
-]
-```
 
 ### Field meanings
 - `type`: GraphQL node type name
@@ -191,7 +199,7 @@ The heatmap expects an array of objects in this shape:
 
 ## Development notes
 
-- The current backend can start with mock data and later be replaced with live GraphQL introspection and sampling logic.
+- The current backend is using Countries GraphQL API and later be replaced with any GraphQL introspection and sampling logic.
 - CORS is enabled in the sample backend for local development.
 - For production use, restrict allowed origins and secure credentials appropriately.
 - If the schema is large, consider adding backend caching and pagination-aware sampling.

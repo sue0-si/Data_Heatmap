@@ -43,16 +43,85 @@ async function callGraphQL(query, variables = {}) {
 }
 
 async function sampleCompleteness() {
-  // Example: return static mock data for now
-  // TODO: replace with real GraphQL calls to compute completeness
-  return [
-    { type: "User", field: "id", value: 1.0 },
-    { type: "User", field: "email", value: 0.92 },
-    { type: "User", field: "phone", value: 0.3 },
-    { type: "Order", field: "id", value: 1.0 },
-    { type: "Order", field: "total", value: 0.99 },
-    { type: "Order", field: "couponCode", value: 0.15 }
-  ];
+  const query = `
+    query SampleCompletenessData {
+      countries {
+        code
+        name
+        native
+        phone
+        capital
+        currency
+        emoji
+        emojiU
+      }
+      continents {
+        code
+        name
+      }
+      languages {
+        code
+        name
+        native
+        rtl
+      }
+    }
+  `;
+
+  const data = await callGraphQL(query);
+
+  function computeCompleteness(typeName, items, fields) {
+    const sampleCount = Array.isArray(items) ? items.length : 0;
+
+    return fields.map((field) => {
+      if (sampleCount === 0) {
+        return {
+          type: typeName,
+          field,
+          value: null,
+          sampleCount: 0,
+          nonNullCount: 0
+        };
+      }
+
+      const nonNullCount = items.filter(
+        (item) => item && item[field] !== null && item[field] !== undefined
+      ).length;
+
+      return {
+        type: typeName,
+        field,
+        value: nonNullCount / sampleCount,
+        sampleCount,
+        nonNullCount
+      };
+    });
+  }
+
+  const countryMetrics = computeCompleteness("Country", data.countries, [
+    "code",
+    "name",
+    "native",
+    "phone",
+    "capital",
+    "currency",
+    "emoji",
+    "emojiU"
+  ]);
+
+  const continentMetrics = computeCompleteness("Continent", data.continents, [
+    "code",
+    "name"
+  ]);
+
+  const languageMetrics = computeCompleteness("Language", data.languages, [
+    "code",
+    "name",
+    "native",
+    "rtl"
+  ]);
+
+  return [...countryMetrics, ...continentMetrics, ...languageMetrics];
 }
 
 // Allow CORS from frontend for now (dev-friendly)
@@ -82,4 +151,5 @@ app.get("/completeness", async (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Backend listening on http://localhost:${PORT}`);
+  console.log(`GraphQL endpoint: ${GRAPHQL_ENDPOINT}`);
 });
